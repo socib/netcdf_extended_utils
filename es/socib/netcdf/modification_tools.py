@@ -2,7 +2,6 @@ import logging
 from netCDF4 import Dataset
 from numpy import *
 import os
-from operator import ne
 
 __author__ = 'ksebastian'
 
@@ -10,6 +9,7 @@ logger = logging.getLogger('netcdf_utils')
 
 
 class NetcdfUpdater:
+
     def __init__(self):
         """
         Initialize the logger object
@@ -17,7 +17,13 @@ class NetcdfUpdater:
 
     @staticmethod
     def modify_netcdf_file(netcdf_canonical_path=None, new_variables_data=dict(), new_global_attributes=dict(),
-                           new_variable_attributes=dict()):
+                           new_variable_attributes=dict(),
+                           remove_element=dict({
+                               "global_attributes": set(),
+                               "variables": set(),
+                               "dimensions": set(),
+
+                           })):
         """
 
         Modify the NetCDF file. Features:
@@ -60,10 +66,18 @@ class NetcdfUpdater:
         }
         :param new_variables_data: The new variable data to be updated in the NetCDF file.
 
+        :type delete: dict() with the following format
+        {
+            "global_attributes": Set()
+            "variables": Set()
+            "dimensions": Set()
+        }
+        :param delete:
+
         """
 
         if netcdf_canonical_path is None:
-            logger.error('NetCDF canonical path is None')
+            logger.error('The NetCDF canonical path must be provided')
             return
 
         logger.debug('Modifying NetCDF file ' + netcdf_canonical_path)
@@ -81,12 +95,24 @@ class NetcdfUpdater:
         # Set the new NetCDF global attributes from the given NetCDF file and the given new global attributes if
         # them exists. IMPORTANT: The below method doesn't preserve the original dictionary order
         #### new_file.setncatts(dict(org_file.__dict__, **new_global_attributes))
-        new_file.setncatts(org_file.__dict__)
+        # new_file.setncatts(org_file.__dict__)
+        for key, value in org_file.__dict__.iteritems():
+
+            # Do not add global attributes to delete
+            if key in remove_element["global_attributes"]:
+                continue
+
+            new_file.setncattr(key, value)
+
         for key, value in new_global_attributes.items():
             new_file.setncattr(key, value)
 
         # Update the NetCDF dimensions from the original NetCDF file
         for dimension_name in org_file.dimensions.keys():
+
+            # Do not add dimensions to delete
+            if dimension_name in remove_element["dimensions"]:
+                continue
 
             dimension = org_file.dimensions[dimension_name]
 
@@ -110,6 +136,10 @@ class NetcdfUpdater:
 
         # Update the NetCDF variables from the original NetCDF file
         for v_name in org_file.variables.keys():
+
+            # Do not add variables to delete
+            if v_name in remove_element["variables"]:
+                continue
 
             v = org_file.variables[v_name]
             # The dtype attribute allways has the | character at the first position.

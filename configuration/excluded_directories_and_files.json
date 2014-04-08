@@ -1,5 +1,7 @@
 {
     "directories_and_files":[
+        "buoy_",
+        "L0",
         "beach_monitoring",
         "satellite",
         "sostest",
