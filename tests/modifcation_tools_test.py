@@ -13,7 +13,7 @@ def modify_netcdf_file_test():
     """
 
     # Get the log.conf file absolute path
-    LOG_CONFIG_FILE_REL_PATH = '../configuration/log.conf'
+    LOG_CONFIG_FILE_REL_PATH = '../netcdf_extended_utils/configuration/log.conf'
     module_path = os.path.dirname(__file__)
     log_config_file_abs_path = os.path.join(module_path, LOG_CONFIG_FILE_REL_PATH)
 
@@ -23,7 +23,7 @@ def modify_netcdf_file_test():
     netcdf_canonical_path = os.path.join(module_path, "dep0001_drifter-svp014_scb-svp009_L1_2013-12-02.nc")
 
     #
-    # Initialize the variable data dictionary in the NetCDF file. Set the dictionary to modify the trajectory variable
+    # Initialize the variable data dictionary. Set the dictionary to modify the trajectory variable
     # value
     #
     new_variables_data = dict()
@@ -38,7 +38,7 @@ def modify_netcdf_file_test():
     new_variables_data['trajectory']['dimensions'] = ['name_strlen']
 
     #
-    # Initialize the global attributes dictionary to be modified in the NetCDF file. Set the dictionary to modify the
+    # Initialize the global attributes dictionary. Set the dictionary to modify the
     # the some global attributes values
     #
     new_global_attributes = dict()
@@ -46,7 +46,7 @@ def modify_netcdf_file_test():
     new_global_attributes['geospatial_lat_units'] = 'degrees_north_tmp'
 
     #
-    # Initialize the variable attributes dictionary to be modified in the NetCDF file. Set the dictionary to modify some
+    # Initialize the variable attributes dictionary. Set the dictionary to modify some
     # attributes of the variable trajectory
     #
     new_variable_attributes = dict()
@@ -56,12 +56,19 @@ def modify_netcdf_file_test():
         'cf_role': 'cf-role attribute value modified'
     }
 
+    # Initialize the remove elements dictionary. Set the dictionary to remove the cdm_data_type global attribute and
+    # the LOCCLASS variable
+    remove_elements = dict();
+    remove_elements['remove_global_attributes'] = set(['cdm_data_type'])
+    remove_elements['remove_variables'] = set(['LOCCLASS'])
+
     # Create the parameters dictionary
     parameters = dict()
     parameters['netcdf_canonical_path'] = netcdf_canonical_path
     parameters['new_variables_data'] = new_variables_data
     parameters['new_global_attributes'] = new_global_attributes
     parameters['new_variable_attributes'] = new_variable_attributes
+    parameters['remove_elements'] = remove_elements
 
     NetcdfUpdater.modify_netcdf_file(**parameters)
 

@@ -10,6 +10,15 @@ logger = logging.getLogger(__name__)
 
 class NetcdfUpdater:
 
+    """
+    Class with the method modify_netcdf_file. This method allows to modify global attributes, variables and variable
+    attributes from a NetCDF file.
+    """
+
+    REMOVE_GLOBAL_ATTRIBUTES_KEY = 'remove_global_attributes'
+    REMOVE_VARIABLES_KEY = 'remove_variables'
+    REMOVE_DIMENSIONS = 'remove_dimensions'
+
     def __init__(self):
         """
 
@@ -18,13 +27,21 @@ class NetcdfUpdater:
 
     @staticmethod
     def modify_netcdf_file(netcdf_canonical_path=None, new_variables_data=dict(), new_global_attributes=dict(),
-                           new_variable_attributes=dict(), keep_tmp_file=True):
+                           new_variable_attributes=dict(),
+                           remove_elements=dict({
+                               'remove_global_attributes': set(),
+                               'remove_variables': set(),
+                               'remove_dimensions': set(),
+
+                           }),
+                           keep_tmp_file=True):
         """
 
         Modify the NetCDF file. Features:
             1.- Modify and add new variable values
             2.- Modify and add new global attributes
             3.- Modify and add new variable attributes
+            4.- Delete global attributes, variables and dimensions
 
         Limitations:
             Only tested with NetCDF3 classic format. Not support groups.
@@ -67,16 +84,33 @@ class NetcdfUpdater:
         }
         :param new_variables_data: The new variable data to be updated in the NetCDF file.
 
+
         :type keep_tmp_file bool
         :param keep_tmp_file If true keep the temporally file with the changes. The name is the same as the original
         file with the prefix "_tmp". Otherwise the original file is deleted and the temporally file is renamed as the
         original file.
+
+        :type remove_elements: dict() with the following format
+        {
+            "remove_global_attributes": Set()
+            "remove_variables": Set()
+            "remove_dimensions": Set()
+        }
+        :param remove_elements:
 
         """
 
         if netcdf_canonical_path is None:
             warnings.warn('NetCDF canonical path is None')
             return
+
+        # Check that the remove elements dictionary has the desirable keys
+        if not NetcdfUpdater.REMOVE_GLOBAL_ATTRIBUTES_KEY in remove_elements:
+            remove_elements[NetcdfUpdater.REMOVE_GLOBAL_ATTRIBUTES_KEY] = set()
+        if not NetcdfUpdater.REMOVE_VARIABLES_KEY in remove_elements:
+            remove_elements[NetcdfUpdater.REMOVE_VARIABLES_KEY] = set()
+        if not NetcdfUpdater.REMOVE_DIMENSIONS in remove_elements:
+            remove_elements[NetcdfUpdater.REMOVE_DIMENSIONS] = set()
 
         logger.debug('Modifying NetCDF file ' + netcdf_canonical_path)
 
@@ -93,12 +127,24 @@ class NetcdfUpdater:
         # Set the new NetCDF global attributes from the given NetCDF file and the given new global attributes if
         # them exists. IMPORTANT: The below method doesn't preserve the original dictionary order
         #### new_file.setncatts(dict(org_file.__dict__, **new_global_attributes))
-        new_file.setncatts(org_file.__dict__)
+        # new_file.setncatts(org_file.__dict__)
+        for key, value in org_file.__dict__.iteritems():
+
+            # Do not add global attributes to delete
+            if key in remove_elements['remove_global_attributes']:
+                continue
+
+            new_file.setncattr(key, value)
+
         for key, value in new_global_attributes.items():
             new_file.setncattr(key, value)
 
         # Update the NetCDF dimensions from the original NetCDF file
         for dimension_name in org_file.dimensions.keys():
+
+            # Do not add dimensions to delete
+            if dimension_name in remove_elements['remove_dimensions']:
+                continue
 
             dimension = org_file.dimensions[dimension_name]
 
@@ -123,6 +169,10 @@ class NetcdfUpdater:
 
         # Update the NetCDF variables from the original NetCDF file
         for v_name in org_file.variables.keys():
+
+            # Do not add variables to delete
+            if v_name in remove_elements['remove_variables']:
+                continue
 
             v = org_file.variables[v_name]
             # The dtype attribute allways has the | character at the first position.
@@ -151,7 +201,7 @@ class NetcdfUpdater:
                 for key, value in new_variable_attributes[v_name].items():
                     new_variable.setncattr(key, value)
 
-        # Crete the NetCDF variables from the original NetCDF file
+        # Create the NetCDF variables from the original NetCDF file
         for v_name, value in new_variables_data.iteritems():
 
             # Only creates the variable if it isn't in the original NetCDF file
