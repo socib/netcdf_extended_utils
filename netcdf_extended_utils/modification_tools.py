@@ -2,22 +2,23 @@ import logging
 from netCDF4 import Dataset
 from numpy import *
 import os
-from operator import ne
 
 __author__ = 'ksebastian'
 
-logger = logging.getLogger('netcdf_utils')
+logger = logging.getLogger(__name__)
 
 
 class NetcdfUpdater:
+
     def __init__(self):
         """
-        Initialize the logger object
+
+        :return:
         """
 
     @staticmethod
     def modify_netcdf_file(netcdf_canonical_path=None, new_variables_data=dict(), new_global_attributes=dict(),
-                           new_variable_attributes=dict()):
+                           new_variable_attributes=dict(), keep_tmp_file=True):
         """
 
         Modify the NetCDF file. Features:
@@ -25,8 +26,14 @@ class NetcdfUpdater:
             2.- Modify and add new global attributes
             3.- Modify and add new variable attributes
 
+        Limitations:
+            Only tested with NetCDF3 classic format. Not support groups.
+
         Creates new variables, attributes, dimensions or global attributes when them not exist in the NetCDF file.
         Otherwise update the them.
+
+        This method, by default, keep the original file without change it, creating another file with the same name as the
+        original with the suffix "_tmp".
 
         :type netcdf_canonical_path str
         :param netcdf_canonical_path: the canonical path to the NetCDF file
@@ -52,18 +59,23 @@ class NetcdfUpdater:
         {
             "variable_name_1": {
                 "data": array() # Numpy Array from 1 to N dimensions
-                "dimensions": ["dimension_name_1", "dimension_name_2"] # The dimensions of the variable ordered as the
-                                                                       # data shape
+                "dimensions": ["dimension_name_1", "dimension_name_2"] # The dimensions of the variable with the same
+                                                                       # order of the shape data
                 "type": str() # The data type from DType class
             },
             ...
         }
         :param new_variables_data: The new variable data to be updated in the NetCDF file.
 
+        :type keep_tmp_file bool
+        :param keep_tmp_file If true keep the temporally file with the changes. The name is the same as the original
+        file with the prefix "_tmp". Otherwise the original file is deleted and the temporally file is renamed as the
+        original file.
+
         """
 
         if netcdf_canonical_path is None:
-            logger.error('NetCDF canonical path is None')
+            warnings.warn('NetCDF canonical path is None')
             return
 
         logger.debug('Modifying NetCDF file ' + netcdf_canonical_path)
@@ -76,7 +88,7 @@ class NetcdfUpdater:
         org_file = Dataset(netcdf_canonical_path, 'r')
 
         # Create a temporally NetCDF file which is going to be modified.
-        new_file = Dataset(netcdf_canonical_path + '_tmp', 'w', format='NETCDF3_CLASSIC')
+        new_file = Dataset(netcdf_canonical_path + '_tmp', 'w', format=org_file.file_format)
 
         # Set the new NetCDF global attributes from the given NetCDF file and the given new global attributes if
         # them exists. IMPORTANT: The below method doesn't preserve the original dictionary order
@@ -93,9 +105,10 @@ class NetcdfUpdater:
             # Set the time dimension as unlimited dimension only if is time dimension
             if dimension_name == 'time':
                 new_file.createDimension(dimension_name, 0)
-            #
+            # If the dimension length has changed, get the new length and se it
             elif dimension_name in new_dimensions_len:
                 new_file.createDimension(dimension_name, new_dimensions_len[dimension_name])
+            # Otherwise set the original dimension length
             else:
                 new_file.createDimension(dimension_name, len(dimension))
 
@@ -141,7 +154,7 @@ class NetcdfUpdater:
         # Crete the NetCDF variables from the original NetCDF file
         for v_name, value in new_variables_data.iteritems():
 
-            # Only creates the variable if it is no in the original NetCDF file
+            # Only creates the variable if it isn't in the original NetCDF file
             if v_name in org_file.variables:
                 continue
 
@@ -153,8 +166,10 @@ class NetcdfUpdater:
         new_file.close()
         org_file.close()
 
-        os.remove(netcdf_canonical_path)
-        os.rename(netcdf_canonical_path + '_tmp', netcdf_canonical_path)
+        #
+        if not keep_tmp_file:
+            os.remove(netcdf_canonical_path)
+            os.rename(netcdf_canonical_path + '_tmp', netcdf_canonical_path)
 
         logger.debug('NetCDF file updated --> ' + netcdf_canonical_path)
 

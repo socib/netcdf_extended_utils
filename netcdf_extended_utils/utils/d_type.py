@@ -2,6 +2,9 @@ __author__ = 'ksebastian'
 
 
 class DType:
+    """
+
+    """
 
     single_character = 'S1'
     nc_byte = 'B'
