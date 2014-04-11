@@ -17,5 +17,9 @@ setup(
     author_email='data.centre@socib.es',
     url='',
     packages=find_packages(),
-    packages_data={'netcdf_extended_utils':['configuration/*']}
+    packages_data={'netcdf_extended_utils':['configuration/*']},
+    install_requires=[
+        'numpy>=1.8.1',
+        'netCDF4>=1.0.8'
+    ]
 )
