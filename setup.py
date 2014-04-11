@@ -11,13 +11,13 @@ setup(
     name='netcdf_extended_utils',
     version='0.1',
     description='Extended netcdf utils to modify NetCDF files',
-    long_description=read('README'),
-    license='GNU',
+    long_description=read('README.rst'),
+    license='GPL v3',
     author='Kristian Sebastian',
     author_email='data.centre@socib.es',
     url='',
     packages=find_packages(),
-    packages_data={'netcdf_extended_utils':['configuration/*']},
+    package_data={'netcdf_extended_utils':['configuration/*']},
     install_requires=[
         'numpy>=1.8.1',
         'netCDF4>=1.0.8'
