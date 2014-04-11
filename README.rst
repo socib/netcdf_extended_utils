@@ -30,7 +30,7 @@ Install the NetCDF extended utils::
 How to
 ------
 
-The `tests https://github.com/socib/netcdf_extended_utils/tree/master/tests`_ folder has some examples to test some features.
+The `tests <https://github.com/socib/netcdf_extended_utils/tree/master/tests>`_ folder has some examples to test some features.
   
   
 
