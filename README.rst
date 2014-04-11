@@ -17,6 +17,15 @@ Limitations:
 Installation
 ------------
 
-Install the requeriments.::
+Install the requeriments::
 
-  pip install -r requeriments.txt
+  pip install numpy>=1.8.1 && pip install -r requirements.txt
+  
+**Note**: Install numpy first because of the `issue #4116 <https://github.com/numpy/numpy/issues/4116/>`_.
+
+Install the NetCDF extended utils::
+  
+  setup.py
+  
+  
+
