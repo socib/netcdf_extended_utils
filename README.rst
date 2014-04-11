@@ -25,7 +25,7 @@ Install the requeriments::
 
 Install the NetCDF extended utils::
   
-  setup.py
+  python setup.py install
   
   
 
