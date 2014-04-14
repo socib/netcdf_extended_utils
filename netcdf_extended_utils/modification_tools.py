@@ -15,9 +15,9 @@ class NetcdfUpdater:
     attributes from a NetCDF file.
     """
 
-    REMOVE_GLOBAL_ATTRIBUTES_KEY = 'remove_global_attributes'
-    REMOVE_VARIABLES_KEY = 'remove_variables'
-    REMOVE_DIMENSIONS = 'remove_dimensions'
+    __REMOVE_GLOBAL_ATTRIBUTES_KEY = 'remove_global_attributes'
+    __REMOVE_VARIABLES_KEY = 'remove_variables'
+    __REMOVE_DIMENSIONS = 'remove_dimensions'
 
     def __init__(self):
         """
@@ -36,7 +36,6 @@ class NetcdfUpdater:
                            }),
                            keep_tmp_file=True):
         """
-
         Modify the NetCDF file. Features:
             1.- Modify and add new variable values
             2.- Modify and add new global attributes
@@ -97,7 +96,6 @@ class NetcdfUpdater:
             "remove_dimensions": Set()
         }
         :param remove_elements:
-
         """
 
         if netcdf_canonical_path is None:
@@ -105,12 +103,12 @@ class NetcdfUpdater:
             return
 
         # Check that the remove elements dictionary has the desirable keys
-        if not NetcdfUpdater.REMOVE_GLOBAL_ATTRIBUTES_KEY in remove_elements:
-            remove_elements[NetcdfUpdater.REMOVE_GLOBAL_ATTRIBUTES_KEY] = set()
-        if not NetcdfUpdater.REMOVE_VARIABLES_KEY in remove_elements:
-            remove_elements[NetcdfUpdater.REMOVE_VARIABLES_KEY] = set()
-        if not NetcdfUpdater.REMOVE_DIMENSIONS in remove_elements:
-            remove_elements[NetcdfUpdater.REMOVE_DIMENSIONS] = set()
+        if not NetcdfUpdater.__REMOVE_GLOBAL_ATTRIBUTES_KEY in remove_elements:
+            remove_elements[NetcdfUpdater.__REMOVE_GLOBAL_ATTRIBUTES_KEY] = set()
+        if not NetcdfUpdater.__REMOVE_VARIABLES_KEY in remove_elements:
+            remove_elements[NetcdfUpdater.__REMOVE_VARIABLES_KEY] = set()
+        if not NetcdfUpdater.__REMOVE_DIMENSIONS in remove_elements:
+            remove_elements[NetcdfUpdater.__REMOVE_DIMENSIONS] = set()
 
         logger.debug('Modifying NetCDF file ' + netcdf_canonical_path)
 
