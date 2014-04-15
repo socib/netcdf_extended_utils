@@ -1,5 +1,5 @@
-NetCDF extended utils
-=====================
+NetCDF extended utils documentation
+===================================
 
 Description
 -----------

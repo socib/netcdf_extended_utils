@@ -1,5 +1,5 @@
-NetCDF extended utils
-=====================
+NetCDF extended utils documentation
+===================================
 
 Description
 -----------
@@ -22,6 +22,10 @@ Install the requeriments::
   pip install numpy>=1.8.1 && pip install -r requirements.txt
   
 **Note**: Install numpy first because of the `issue #4116 <https://github.com/numpy/numpy/issues/4116/>`_.
+
+Download the NetCDF extended utils source code through the git repository:
+
+	`Git repository <https://github.com/socib/netcdf_extended_utils>`_.
 
 Install the NetCDF extended utils::
   
