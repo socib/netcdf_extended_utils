@@ -1,0 +1,242 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>netcdf_extended_utils package &mdash; NetCDF Extended Utils v0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     'v0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="NetCDF Extended Utils v0.1.0 documentation" href="index.html" />
+    <link rel="next" title="netcdf_extended_utils.utils package" href="netcdf_extended_utils.utils.html" />
+    <link rel="prev" title="NetCDF extended utils" href="README.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="netcdf_extended_utils.utils.html" title="netcdf_extended_utils.utils package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="README.html" title="NetCDF extended utils"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">NetCDF Extended Utils v0.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="netcdf-extended-utils-package">
+<h1>netcdf_extended_utils package<a class="headerlink" href="#netcdf-extended-utils-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="netcdf_extended_utils.utils.html">netcdf_extended_utils.utils package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="netcdf_extended_utils.utils.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="netcdf_extended_utils.utils.html#module-netcdf_extended_utils.utils.d_type">netcdf_extended_utils.utils.d_type module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="netcdf_extended_utils.utils.html#module-netcdf_extended_utils.utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-netcdf_extended_utils.modification_tools">
+<span id="netcdf-extended-utils-modification-tools-module"></span><h2>netcdf_extended_utils.modification_tools module<a class="headerlink" href="#module-netcdf_extended_utils.modification_tools" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="netcdf_extended_utils.modification_tools.NetcdfUpdater">
+<em class="property">class </em><tt class="descclassname">netcdf_extended_utils.modification_tools.</tt><tt class="descname">NetcdfUpdater</tt><a class="headerlink" href="#netcdf_extended_utils.modification_tools.NetcdfUpdater" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class with the method modify_netcdf_file. This method allows to modify global attributes, variables and variable
+attributes from a NetCDF file.</p>
+<dl class="staticmethod">
+<dt id="netcdf_extended_utils.modification_tools.NetcdfUpdater.modify_netcdf_file">
+<em class="property">static </em><tt class="descname">modify_netcdf_file</tt><big>(</big><em>netcdf_canonical_path=None</em>, <em>new_variables_data={}</em>, <em>new_global_attributes={}</em>, <em>new_variable_attributes={}</em>, <em>remove_elements={'remove_dimensions': set([])</em>, <em>'remove_global_attributes': set([])</em>, <em>'remove_variables': set([])}</em>, <em>keep_tmp_file=True</em><big>)</big><a class="headerlink" href="#netcdf_extended_utils.modification_tools.NetcdfUpdater.modify_netcdf_file" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Modify the NetCDF file. Features:</dt>
+<dd><ul class="first last simple">
+<li>Modify and add new variable values</li>
+<li>Modify and add new global attributes</li>
+<li>Modify and add new variable attributes</li>
+<li>Delete global attributes, variables and dimensions</li>
+</ul>
+</dd>
+<dt>Limitations:</dt>
+<dd><ul class="first last simple">
+<li>Only tested with NetCDF3 classic format</li>
+<li>Not support groups.</li>
+</ul>
+</dd>
+</dl>
+<p>Creates new variables, attributes, dimensions or global attributes when them not exist in the NetCDF file.
+Otherwise update the them. This method, by default, keep the original file without change it, creating another
+file with the same name as the original with the suffix &#8220;_tmp&#8221;.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>netcdf_canonical_path</strong> (<em>str</em>) &#8211; the canonical path to the NetCDF file</li>
+<li><strong>new_global_attributes</strong> (<em>dict</em>) &#8211; <p>the new global attributes to be updated/added in the NetCDF file.
+Format:</p>
+<div class="highlight-python"><div class="highlight"><pre>{
+    # The value must str or number
+    &quot;global_attribute&quot;: value,
+    ...
+}
+</pre></div>
+</div>
+</li>
+<li><strong>new_variable_attributes</strong> (<em>dict</em>) &#8211; <p>The new variable attributes to be updated/added in the NetCDF file.
+Format:</p>
+<div class="highlight-python"><div class="highlight"><pre>{
+    &quot;variable_name_1&quot;: {
+        # The value must str or number
+        &quot;variable_attribute_name&quot;: value,
+         ...
+    }
+    ...
+}
+</pre></div>
+</div>
+</li>
+<li><strong>new_variables_data</strong> (<em>dict</em>) &#8211; <p>The new variable data to be updated in the NetCDF file.
+Format:</p>
+<div class="highlight-python"><div class="highlight"><pre>{
+    &quot;variable_name_1&quot;: {
+        # Numpy Array from 1 to N dimensions
+        &quot;data&quot;: array()
+        # The dimensions of the variable with the same order of the shape data
+        &quot;dimensions&quot;: [&quot;dimension_name_1&quot;, &quot;dimension_name_2&quot;]
+        # The data type from DType class
+        &quot;type&quot;: str()
+    },
+    ...
+}
+</pre></div>
+</div>
+</li>
+<li><strong>keep_tmp_file</strong> &#8211; If true keep the temporally file with the changes. The name is the same as the original
+file with the prefix &#8220;_tmp&#8221;. Otherwise the original file is deleted and the temporally file is renamed as the
+original file.</li>
+<li><strong>remove_elements</strong> (<em>dict</em>) &#8211; <p>Format:</p>
+<div class="highlight-python"><div class="highlight"><pre>{
+    &quot;remove_global_attributes&quot;: Set()
+    &quot;remove_variables&quot;: Set()
+    &quot;remove_dimensions&quot;: Set()
+}
+</pre></div>
+</div>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-netcdf_extended_utils">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-netcdf_extended_utils" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">netcdf_extended_utils package</a><ul>
+<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-netcdf_extended_utils.modification_tools">netcdf_extended_utils.modification_tools module</a></li>
+<li><a class="reference internal" href="#module-netcdf_extended_utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="README.html"
+                        title="previous chapter">NetCDF extended utils</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="netcdf_extended_utils.utils.html"
+                        title="next chapter">netcdf_extended_utils.utils package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/netcdf_extended_utils.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="netcdf_extended_utils.utils.html" title="netcdf_extended_utils.utils package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="README.html" title="NetCDF extended utils"
+             >previous</a> |</li>
+        <li><a href="index.html">NetCDF Extended Utils v0.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Kristian Sebastian.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
