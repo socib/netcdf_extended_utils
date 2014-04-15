@@ -23,6 +23,7 @@ class NetcdfUpdater:
         """
 
         :return:
+
         """
 
     @staticmethod
@@ -37,65 +38,77 @@ class NetcdfUpdater:
                            keep_tmp_file=True):
         """
         Modify the NetCDF file. Features:
-            1.- Modify and add new variable values
-            2.- Modify and add new global attributes
-            3.- Modify and add new variable attributes
-            4.- Delete global attributes, variables and dimensions
+            - Modify and add new variable values
+            - Modify and add new global attributes
+            - Modify and add new variable attributes
+            - Delete global attributes, variables and dimensions
 
         Limitations:
-            Only tested with NetCDF3 classic format. Not support groups.
+            - Only tested with NetCDF3 classic format
+            - Not support groups.
 
         Creates new variables, attributes, dimensions or global attributes when them not exist in the NetCDF file.
-        Otherwise update the them.
+        Otherwise update the them. This method, by default, keep the original file without change it, creating another
+        file with the same name as the original with the suffix "_tmp".
 
-        This method, by default, keep the original file without change it, creating another file with the same name as the
-        original with the suffix "_tmp".
-
-        :type netcdf_canonical_path str
+        :type netcdf_canonical_path: str
         :param netcdf_canonical_path: the canonical path to the NetCDF file
 
-        :type new_global_attributes dict() with the following format
-        {
-            "global_attribute": value, # The value must str or number
-            ...
-        }
-        :param new_global_attributes: the new global attributes to be updated/added in the NetCDF file
+        :type new_global_attributes: dict
+        :param new_global_attributes: the new global attributes to be updated/added in the NetCDF file.
+            Format::
 
-        :type new_variable_attributes dict() with the following format
-        {
-            "variable_name_1": {
-                "variable_attribute_name": value, # The value must str or number
-                ...
-            }
-            ...
-        }
-        :param new_variable_attributes: The new variable attributes to be updated/added in the NetCDF file
+                {
+                    # The value must str or number
+                    "global_attribute": value,
+                    ...
+                }
 
-        :type new_variables_data: dict() with the following format
-        {
-            "variable_name_1": {
-                "data": array() # Numpy Array from 1 to N dimensions
-                "dimensions": ["dimension_name_1", "dimension_name_2"] # The dimensions of the variable with the same
-                                                                       # order of the shape data
-                "type": str() # The data type from DType class
-            },
-            ...
-        }
+        :type new_variable_attributes: dict
+        :param new_variable_attributes: The new variable attributes to be updated/added in the NetCDF file.
+            Format::
+
+                {
+                    "variable_name_1": {
+                        # The value must str or number
+                        "variable_attribute_name": value,
+                         ...
+                    }
+                    ...
+                }
+
+        :type new_variables_data: dict
         :param new_variables_data: The new variable data to be updated in the NetCDF file.
+            Format::
 
+                {
+                    "variable_name_1": {
+                        # Numpy Array from 1 to N dimensions
+                        "data": array()
+                        # The dimensions of the variable with the same order of the shape data
+                        "dimensions": ["dimension_name_1", "dimension_name_2"]
+                        # The data type from DType class
+                        "type": str()
+                    },
+                    ...
+                }
 
-        :type keep_tmp_file bool
-        :param keep_tmp_file If true keep the temporally file with the changes. The name is the same as the original
-        file with the prefix "_tmp". Otherwise the original file is deleted and the temporally file is renamed as the
-        original file.
+        :type keep_tmp_file bool:
+        :param keep_tmp_file:
+            If true keep the temporally file with the changes. The name is the same as the original
+            file with the prefix "_tmp". Otherwise the original file is deleted and the temporally file is renamed as the
+            original file.
 
-        :type remove_elements: dict() with the following format
-        {
-            "remove_global_attributes": Set()
-            "remove_variables": Set()
-            "remove_dimensions": Set()
-        }
+        :type remove_elements: dict
         :param remove_elements:
+            Format::
+
+                {
+                    "remove_global_attributes": Set()
+                    "remove_variables": Set()
+                    "remove_dimensions": Set()
+                }
+
         """
 
         if netcdf_canonical_path is None:
@@ -214,7 +227,7 @@ class NetcdfUpdater:
         new_file.close()
         org_file.close()
 
-        #
+        # Remove the original NetCDF file and rename the temporally file with the original name
         if not keep_tmp_file:
             os.remove(netcdf_canonical_path)
             os.rename(netcdf_canonical_path + '_tmp', netcdf_canonical_path)
@@ -226,22 +239,27 @@ class NetcdfUpdater:
         """
         Return the new lengths of the dimensions, calculated from the given variable data.
 
-        :type new_variables_data: dict() with the following format
-        {
-            "variable_name_1": {
-                "data": array() # Numpy Array from 1 to N dimensions
-                "dimensions": ["dimension_name_1", "dimension_name_2"] # The dimensions of the variable ordered as the
-                                                                       # data shape
-            },
-            ...
-        }
+        :type new_variables_data: dict()
+            Format::
+                {
+                    "variable_name_1": {
+                        # Numpy Array from 1 to N dimensions
+                        "data": array()
+                        # The dimensions of the variable ordered as the data shape
+                        "dimensions": ["dimension_name_1", "dimension_name_2"]
+                    },
+                    ...
+                }
+
         :param new_variables_data: The new variable data to be updated/added in the NetCDF file.
 
-        :rtype: dict() with the following format
-        {
-            "dimension_name": int(), # Dimension length
-            ...
-        }
+        :rtype: dict()
+            Format::
+            {
+                 # Dimension length
+                "dimension_name": int(),
+                ...
+            }
         :return: the new lengths of the dimensions
 
         """
